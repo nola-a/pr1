@@ -29,22 +29,31 @@ import com.nolano.pr1.IEngine;
 import com.nolano.pr1.Point;
 import org.openjdk.jmh.annotations.Benchmark;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class EngineV1Benchmark {
 
-    public Point newRandomPoint(Random random, double max, double min) {
-        return Point.from(
-                String.valueOf(min + random.nextDouble() * max),
-                String.valueOf(min + random.nextDouble() * max));
+    private List<Point> points() {
+        List<Point> points = new ArrayList<>();
+        points.add(Point.from("-264.81584621972024","-307.2546848857214"));
+        points.add(Point.from("-250.98833514127273","-867.8365807754062"));
+        points.add(Point.from("-311.08953689643374","-39.84129983296975"));
+        points.add(Point.from("-37.94272842602675","-697.5852178219161"));
+        points.add(Point.from("-155.7279273993845","-908.2169228200199"));
+        points.add(Point.from("-941.786653181169","-543.1338712283853"));
+        points.add(Point.from("-357.20619687441535","-318.64918963166383"));
+        points.add(Point.from("-910.0284043510702","-311.4489322851374"));
+        points.add(Point.from("-116.70465460538117","-332.22180707283474"));
+        points.add(Point.from("-773.7753484890891","-578.0853769353632"));
+        return points;
     }
 
     @Benchmark
     public void testPerformance() {
         IEngine engine = new EngineV1();
-        Random random = new Random();
-        for (int i = 0; i < 10; ++i) {
-            Point p = newRandomPoint(random, 1000, -1000);
+        for (Point p: points()) {
             engine.addPoint(p);
         }
     }
