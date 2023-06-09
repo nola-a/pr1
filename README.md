@@ -33,7 +33,7 @@ MyBenchmark.testPerformance  thrpt  200  1801.176 ± 34.839  ops/s
 ```bash
 $ curl http://127.0.0.1:8080/point -d '{"x":"455456", "y":"456"}'  # Add a point to the space
 $ curl http://127.0.0.1:8080/lines/2 # Get all line segments passing through at least N points
-$ curlhttp://127.0.0.1:8080/space # Get all points in the space
+$ curl http://127.0.0.1:8080/space # Get all points in the space
 $ curl -X DELETE http://127.0.0.1:8080/space # Remove all points from the space
 ```  
 
