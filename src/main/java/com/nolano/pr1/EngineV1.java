@@ -24,7 +24,6 @@
  */
 package com.nolano.pr1;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +35,7 @@ public class EngineV1 implements IEngine {
     private static final Logger LOGGER = LoggerFactory.getLogger(EngineV1.class);
     private final List<List<Point>> lines = new ArrayList<>();
     private final Set<Point> points = new HashSet<>();
+    private final List<List<Point>> tempNewLines = new ArrayList<>();
 
     @Override
     public synchronized void addPoint(Point newPoint) {
@@ -49,12 +49,12 @@ public class EngineV1 implements IEngine {
 
         if (lines.isEmpty()) {
             // case 0: the space is empty
-            lines.add(new ArrayList<>(Arrays.asList(newPoint)));
+            List<Point> newList = new ArrayList<>();
+            newList.add(newPoint);
+            lines.add(newList);
             LOGGER.debug("the space is empty, so the first point {} is added", newPoint);
             return;
         }
-
-        List<List<Point>> newLines = new ArrayList<>();
 
         for (List<Point> line: lines) {
 
@@ -65,7 +65,7 @@ public class EngineV1 implements IEngine {
                 return;
             }
 
-            if (belongsToLine(newPoint, line.get(0), line.get(1))) {
+            if (belongsToLine(line.get(0), line.get(1), newPoint)) {
                 // case 2: add point to the line
                 LOGGER.debug("the point {} belongs to the line [{} {}]", newPoint, line.get(0), line.get(1));
                 line.add(newPoint);
@@ -74,12 +74,16 @@ public class EngineV1 implements IEngine {
 
             // case 3: since the point does not belong to the line then creates line.size() new lines
             for (Point p: line) {
-                newLines.add(new ArrayList(Arrays.asList(newPoint, p)));
+                List<Point> newList = new ArrayList<>();
+                newList.add(newPoint);
+                newList.add(p);
+                tempNewLines.add(newList);
                 LOGGER.debug("created the line [{} {}]", newPoint, p);
             }
         }
 
-        lines.addAll(newLines);
+        lines.addAll(tempNewLines);
+        tempNewLines.clear();
     }
 
     @Override
@@ -94,22 +98,15 @@ public class EngineV1 implements IEngine {
         lines.clear();
     }
 
-    @Override
-    public List<List<Point>> getLines(int npoints) {
-        return lines.stream().filter(n -> n.size() >= npoints).collect(Collectors.toList());
+    @Override public List<List<Point>> getLines(int npoints) { return lines.stream().filter(n -> n.size() >= npoints).collect(Collectors.toList());
     }
 
     public static boolean belongsToLine(Point p, Point q, Point r) {
-        boolean check = false;
-        if (p.equals(r) || q.equals(r))
-            check = true;
-        if (!check) {
-            // if r belongs to the line (p,q) then equation below is valid
-            // (qx - px) * (ry - py) == (qy - py) * (rx - px)
-            BigDecimal left = q.x.subtract(p.x).multiply(r.y.subtract(p.y));
-            BigDecimal right = q.y.subtract(p.y).multiply(r.x.subtract(p.x));
-            check = left.equals(right);
-        }
+        // if r belongs to the line (p,q) then equation below is valid
+        // (qx - px) * (ry - py) == (qy - py) * (rx - px)
+        double left = (q.x - p.x) * (r.y - p.y);
+        double right = (q.y - p.y) * (r.x - p.x);
+        boolean check = left == right;
         LOGGER.trace("{} belongs to the line {} {} result={}", r, p, q, check);
         return check;
     }

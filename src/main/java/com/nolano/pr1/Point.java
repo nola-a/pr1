@@ -30,15 +30,15 @@ import java.util.Objects;
 
 public class Point {
 
-    public final BigDecimal x;
-    public final BigDecimal y;
+    public final double x;
+    public final double y;
 
     private Point(String x, String y) {
-        this.x = new BigDecimal(x);
-        this.y = new BigDecimal(y);
+        this.x = Double.valueOf(x);
+        this.y = Double.valueOf(y);
     }
 
-    private Point(BigDecimal x, BigDecimal y) {
+    private Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -48,7 +48,7 @@ public class Point {
     }
 
     public static Point from(Point p, double addX, double addY) {
-        return new Point(p.x.add(new BigDecimal(addX)), p.y.add(new BigDecimal(addY)));
+        return new Point(p.x + addX, p.y + addY);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Point {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
-        return Objects.equals(x, point.x) && Objects.equals(y, point.y);
+        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
     }
 
     @Override

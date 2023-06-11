@@ -36,8 +36,8 @@ public class Serializer implements JsonSerializer<Point> {
     @Override
     public JsonElement serialize(Point point, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("x", point.x.toPlainString());
-        obj.addProperty("y", point.y.toPlainString());
+        obj.addProperty("x", String.valueOf(point.x));
+        obj.addProperty("y", String.valueOf(point.y));
         return obj;
     }
 }
