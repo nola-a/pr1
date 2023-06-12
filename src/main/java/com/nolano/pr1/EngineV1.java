@@ -37,6 +37,7 @@ public class EngineV1 implements IEngine {
     private final Set<Point> points = new HashSet<>();
     private final List<List<Point>> tempNewLines = new ArrayList<>();
     private final Set<Point> tempPoints = new HashSet<>();
+    private boolean found = false;
 
     @Override
     public synchronized void addPoint(Point newPoint) {
@@ -72,7 +73,8 @@ public class EngineV1 implements IEngine {
                 // case 2: add point to the line
                 LOGGER.debug("the point {} belongs to the line [{} {}]", newPoint, line.get(0), line.get(1));
                 line.add(newPoint);
-                return;
+                found = true;
+                break;
             }
 
             // case 3: since the point does not belong to the line then creates line.size() new lines
@@ -87,9 +89,11 @@ public class EngineV1 implements IEngine {
             }
         }
 
-        lines.addAll(tempNewLines);
+        if (!found)
+            lines.addAll(tempNewLines);
         tempNewLines.clear();
         tempPoints.clear();
+        found = false;
     }
 
     @Override
