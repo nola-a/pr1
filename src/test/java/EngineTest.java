@@ -82,6 +82,19 @@ public class EngineTest {
     }
 
     @Test
+    public void testTwoPointsForLine() {
+
+        // load random points
+        for (int i = 0; i < 4; ++i) {
+            Point p = newRandomPoint(1000, -1000);
+            engine.addPoint(p);
+        }
+
+        // take all the lines
+        Assert.assertEquals(6, engine.getLines(0).size());
+    }
+
+    @Test
     public void testCoherence() {
 
         // load random points
