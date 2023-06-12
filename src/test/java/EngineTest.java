@@ -85,7 +85,7 @@ public class EngineTest {
     public void testCoherence() {
 
         // load random points
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             Point p = newRandomPoint(1000, -1000);
             engine.addPoint(p);
         }

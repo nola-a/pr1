@@ -36,6 +36,7 @@ public class EngineV1 implements IEngine {
     private final List<List<Point>> lines = new ArrayList<>();
     private final Set<Point> points = new HashSet<>();
     private final List<List<Point>> tempNewLines = new ArrayList<>();
+    private final Set<Point> tempPoints = new HashSet<>();
 
     @Override
     public synchronized void addPoint(Point newPoint) {
@@ -58,11 +59,13 @@ public class EngineV1 implements IEngine {
 
         for (List<Point> line: lines) {
 
+            LOGGER.trace("parsing line {}", line);
+
             if (line.size() == 1) {
                 // case 1: create the first line (built by 2 points)
                 line.add(newPoint);
                 LOGGER.debug("created the first line [{} {}]", line.get(0), line.get(1));
-                return;
+                continue;
             }
 
             if (belongsToLine(line.get(0), line.get(1), newPoint)) {
@@ -74,6 +77,8 @@ public class EngineV1 implements IEngine {
 
             // case 3: since the point does not belong to the line then creates line.size() new lines
             for (Point p: line) {
+                if (!tempPoints.add(p))
+                    continue;
                 List<Point> newList = new ArrayList<>();
                 newList.add(newPoint);
                 newList.add(p);
@@ -84,6 +89,7 @@ public class EngineV1 implements IEngine {
 
         lines.addAll(tempNewLines);
         tempNewLines.clear();
+        tempPoints.clear();
     }
 
     @Override
